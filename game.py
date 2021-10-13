@@ -19,7 +19,7 @@ pygame.display.set_caption('Sprites y Sonido')
 NEGRO = (0, 0, 0)
 
 # configurar la estructura de bloque de datos
-jugador = pygame.Rect(300, 100, 40, 40)
+jugador = pygame.Rect(300, 100, 10, 10)
 
 #Estados juego
 jugando = False
@@ -30,14 +30,10 @@ pacmanDerecha = pygame.image.load('PacmanDerecha.png')
 pacmanIzquierda = pygame.image.load('PacmanIzq.png')
 
 #Fantasmita
-enemy = pygame.Rect(100, 100, 10, 40)
+fantasmitas = []
+for i in range(3):
+    fantasmitas.append(pygame.Rect(100 + i*25, 100 - i*25, 10, 10))
 fantasmitaAuto= pygame.image.load('fantasmita-izquierda.png')
-
-enemy2 = pygame.Rect(50, 100, 10, 40)
-fantasmitaTop= pygame.image.load('fantasmita-izquierda.png')
-
-enemy3 = pygame.Rect(75, 100, 10, 40)
-fantasmitaBottom = pygame.image.load('fantasmita-izquierda.png')
 
 # Fantasmita configurar variables del teclado
 VELOCIDADMOVIMIENTOENEMY = 3
@@ -137,7 +133,7 @@ while True:
             if evento.type == MOUSEBUTTONUP:
                 comidas.append(pygame.Rect(evento.pos[0] - 10, evento.pos[1] - 10, 20, 20))
 
-    if level == 1:
+    if level == 1 and gameRunning:
         superficieVentana.fill(NEGRO)
 
         superficieVentana.blit(fondo, pygame.Rect(0, 0, ANCHOVENTANA, ALTOVENTANA))
@@ -175,26 +171,25 @@ while True:
             if lastState == "moverseArriba": superficieVentana.blit(pacmanArriba, jugador)
 
         #GHOST AUTO--------------------------------------------
-        dx = jugador.x - enemy.x
-        dy = jugador.y - enemy.y
+        for i in range(3):
+            dx = jugador.x - fantasmitas[i].x
+            dy = jugador.y - fantasmitas[i].y
 
-        dist = math.hypot(dx, dy)
-        dx, dy = dx / (dist + 0.1) , dy / (dist+0.1)   # Normalize.
-        
-        # Acercar al jugador
-        enemy.x += dx * VELOCIDADMOVIMIENTOENEMY
-        enemy.y += dy * VELOCIDADMOVIMIENTOENEMY
+            dist = math.hypot(dx, dy)
+            dx, dy = dx / (dist + 0.1) , dy / (dist+0.1)   # Normalize.
+            
+            # Acercar al jugador
+            fantasmitas[i].x += dx * VELOCIDADMOVIMIENTOENEMY
+            fantasmitas[i].y += dy * VELOCIDADMOVIMIENTOENEMY
 
-        superficieVentana.blit(fantasmitaAuto, enemy)
-        
+            superficieVentana.blit(fantasmitaAuto, fantasmitas[i])
 
-
-        if jugador.colliderect(enemy): #or enemy2 or enemy3):
-            comidas = []
-            gameRunning = False
-            font = pygame.font.Font('freesansbold.ttf', 72)
-            text = font.render('Perdiste :(', True, (255,255,255), (0, 0, 0))
-            superficieVentana.blit(text, pygame.Rect(60, (ALTOVENTANA/2)-50, 100, 50))
+            if jugador.colliderect(fantasmitas[i]): #or enemy2 or enemy3):
+                comidas = []
+                gameRunning = False
+                font = pygame.font.Font('freesansbold.ttf', 72)
+                text = font.render('Perdiste :(', True, (255,255,255), (0, 0, 0))
+                superficieVentana.blit(text, pygame.Rect(60, (ALTOVENTANA/2)-50, 100, 50))
 
         # comprobar si el jugador ha intersectado alguno de los cuadrados de comida
         for comida in comidas[:]:
