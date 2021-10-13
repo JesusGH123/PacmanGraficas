@@ -3,8 +3,6 @@ from pygame import display
 from pygame.locals import *
 import math
 
-x = 0
-
 # configurar pygame
 pygame.init()
 relojPrincipal = pygame.time.Clock()
@@ -136,113 +134,90 @@ while True:
                         pygame.mixer.music.play(-1, 0.0)
                     músicaSonando = not músicaSonando
 
-               
-
             if evento.type == MOUSEBUTTONUP:
                 comidas.append(pygame.Rect(evento.pos[0] - 10, evento.pos[1] - 10, 20, 20))
 
-            superficieVentana.fill(NEGRO)
+    if level == 1:
+        superficieVentana.fill(NEGRO)
 
-            superficieVentana.blit(fondo, pygame.Rect(0, 0, ANCHOVENTANA, ALTOVENTANA))
-            
-            font = pygame.font.Font('freesansbold.ttf', 32)
-            text = font.render('Puntaje: ' + str(puntaje), True, (255,255,255), (0, 0, 0))
-            superficieVentana.blit(text, pygame.Rect(30, 30, 100, 25))
+        superficieVentana.blit(fondo, pygame.Rect(0, 0, ANCHOVENTANA, ALTOVENTANA))
+        
+        font = pygame.font.Font('freesansbold.ttf', 32)
+        text = font.render('Puntaje: ' + str(puntaje), True, (255,255,255), (0, 0, 0))
+        superficieVentana.blit(text, pygame.Rect(30, 30, 100, 25))
 
-            contadorComida += 1
-            if contadorComida >= NUEVACOMIDA:
-                # agregar nueva comida
-                contadorComida = 0
-                comidas.append(pygame.Rect(random.randint(0, ANCHOVENTANA - 20), random.randint(0, ALTOVENTANA - 20), 20, 20))
-            # mover el jugador
-            if moverseAbajo and jugador.bottom < ALTOVENTANA:
-                jugador.top += VELOCIDADMOVIMIENTO
-                superficieVentana.blit(pacmanAbajo, jugador)
-                lastState = "moverseAbajo"
-            elif moverseArriba and jugador.top > 0:
-                jugador.top -= VELOCIDADMOVIMIENTO
-                superficieVentana.blit(pacmanArriba, jugador)
-                lastState = "moverseArriba"
-            elif moverseIzquierda and jugador.left > 0:
-                jugador.left -= VELOCIDADMOVIMIENTO
-                superficieVentana.blit(pacmanIzquierda, jugador)
-                lastState = "moverseIzquierda"
-            elif moverseDerecha and jugador.right < ANCHOVENTANA:
-                jugador.right += VELOCIDADMOVIMIENTO
-                superficieVentana.blit(pacmanDerecha, jugador)
-                lastState = "moverseDerecha"
-            else:
-                if lastState == "moverseDerecha": superficieVentana.blit(pacmanDerecha, jugador)
-                if lastState == "moverseIzquierda": superficieVentana.blit(pacmanIzquierda, jugador)
-                if lastState == "moverseAbajo": superficieVentana.blit(pacmanAbajo, jugador)
-                if lastState == "moverseArriba": superficieVentana.blit(pacmanArriba, jugador)
+        contadorComida += 1
+        if contadorComida >= NUEVACOMIDA:
+            # agregar nueva comida
+            contadorComida = 0
+            comidas.append(pygame.Rect(random.randint(0, ANCHOVENTANA - 20), random.randint(0, ALTOVENTANA - 20), 20, 20))
+        # mover el jugador
+        if moverseAbajo and jugador.bottom < ALTOVENTANA:
+            jugador.top += VELOCIDADMOVIMIENTO
+            superficieVentana.blit(pacmanAbajo, jugador)
+            lastState = "moverseAbajo"
+        elif moverseArriba and jugador.top > 0:
+            jugador.top -= VELOCIDADMOVIMIENTO
+            superficieVentana.blit(pacmanArriba, jugador)
+            lastState = "moverseArriba"
+        elif moverseIzquierda and jugador.left > 0:
+            jugador.left -= VELOCIDADMOVIMIENTO
+            superficieVentana.blit(pacmanIzquierda, jugador)
+            lastState = "moverseIzquierda"
+        elif moverseDerecha and jugador.right < ANCHOVENTANA:
+            jugador.right += VELOCIDADMOVIMIENTO
+            superficieVentana.blit(pacmanDerecha, jugador)
+            lastState = "moverseDerecha"
+        else:
+            if lastState == "moverseDerecha": superficieVentana.blit(pacmanDerecha, jugador)
+            if lastState == "moverseIzquierda": superficieVentana.blit(pacmanIzquierda, jugador)
+            if lastState == "moverseAbajo": superficieVentana.blit(pacmanAbajo, jugador)
+            if lastState == "moverseArriba": superficieVentana.blit(pacmanArriba, jugador)
 
-            #GHOST AUTO--------------------------------------------
-            dx = jugador.x - enemy.x
-            dy = jugador.y - enemy.y
+        #GHOST AUTO--------------------------------------------
+        dx = jugador.x - enemy.x
+        dy = jugador.y - enemy.y
 
-            dist = math.hypot(dx, dy)
-            dx, dy = dx / (dist + 0.1) , dy / (dist+0.1)   # Normalize.
-           
-            # Acercar al jugador
-            enemy.x += dx * VELOCIDADMOVIMIENTOENEMY
-            enemy.y += dy * VELOCIDADMOVIMIENTOENEMY
+        dist = math.hypot(dx, dy)
+        dx, dy = dx / (dist + 0.1) , dy / (dist+0.1)   # Normalize.
+        
+        # Acercar al jugador
+        enemy.x += dx * VELOCIDADMOVIMIENTOENEMY
+        enemy.y += dy * VELOCIDADMOVIMIENTOENEMY
 
-            superficieVentana.blit(fantasmitaAuto, enemy)
-
-            
-            print("holi" + str(x))
-            x = x+1
-
-            #GHOST TOP
-            if(gameRunning):
-                enemy2.x += 3
-            if(enemy2.x >= 400):
-                enemy2.x -= 3 
-            elif(enemy2.x <= 100):
-                enemy2.x += 3
-            
-            superficieVentana.blit(fantasmitaTop, enemy2)
-
-            #GHOST BOTTOM
-            if(enemy3.x >= 400):
-                enemy3.x -= 3 
-            elif(enemy3.x <= 100):
-                enemy3.x +=3
-            
-            superficieVentana.blit(fantasmitaBottom, enemy3)
-            
-
-            if jugador.colliderect(enemy or enemy2 or enemy3):
-                comidas = []
-                gameRunning = False
-                font = pygame.font.Font('freesansbold.ttf', 72)
-                text = font.render('Perdiste :(', True, (255,255,255), (0, 0, 0))
-                superficieVentana.blit(text, pygame.Rect(60, (ALTOVENTANA/2)-50, 100, 50))
+        superficieVentana.blit(fantasmitaAuto, enemy)
+        
 
 
-            # comprobar si el jugador ha intersectado alguno de los cuadrados de comida
-            for comida in comidas[:]:
-                if jugador.colliderect(comida):
-                    comidas.remove(comida)
-                    jugador = pygame.Rect(jugador.left, jugador.top, jugador.width + 2, jugador.height + 2)
-                    #imagenEstiradaJugador = pygame.transform.scale(imagenJugador, (jugador.width, jugador.height))
-                    puntaje = puntaje + 1
-                    if músicaSonando:
-                        sonidoRecolección.play()
+        if jugador.colliderect(enemy): #or enemy2 or enemy3):
+            comidas = []
+            gameRunning = False
+            font = pygame.font.Font('freesansbold.ttf', 72)
+            text = font.render('Perdiste :(', True, (255,255,255), (0, 0, 0))
+            superficieVentana.blit(text, pygame.Rect(60, (ALTOVENTANA/2)-50, 100, 50))
 
-            if puntaje >= 10:
-                comidas = []
-                gameRunning = False
+        # comprobar si el jugador ha intersectado alguno de los cuadrados de comida
+        for comida in comidas[:]:
+            if jugador.colliderect(comida):
+                comidas.remove(comida)
+                jugador = pygame.Rect(jugador.left, jugador.top, jugador.width + 2, jugador.height + 2)
+                #imagenEstiradaJugador = pygame.transform.scale(imagenJugador, (jugador.width, jugador.height))
+                puntaje = puntaje + 1
+                if músicaSonando:
+                    sonidoRecolección.play()
 
-                font = pygame.font.Font('freesansbold.ttf', 72)
-                text = font.render('GANASTE!', True, (255,255,255), (0, 0, 0))
-                superficieVentana.blit(text, pygame.Rect(60, (ALTOVENTANA/2)-50, 100, 50))
+        if puntaje >= 10:
+            comidas = []
+            gameRunning = False
 
-            # dibujar la comida
-            for comida in comidas:
-                superficieVentana.blit(imagenComida, comida)
+            font = pygame.font.Font('freesansbold.ttf', 72)
+            text = font.render('GANASTE!', True, (255,255,255), (0, 0, 0))
+            superficieVentana.blit(text, pygame.Rect(60, (ALTOVENTANA/2)-50, 100, 50))
 
-            # dibujar la ventana sobre la pantalla
-            relojPrincipal.tick(40)
-            pygame.display.update()
+        # dibujar la comida
+        for comida in comidas:
+            superficieVentana.blit(imagenComida, comida)
+
+    # dibujar la ventana sobre la pantalla
+    relojPrincipal.tick(40)
+    pygame.display.update()
